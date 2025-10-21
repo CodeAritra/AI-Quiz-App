@@ -1,5 +1,4 @@
-// src/pages/QuizPage.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { demoQuestions } from "../data/demoQuestions";
 
 interface QuizPageProps {

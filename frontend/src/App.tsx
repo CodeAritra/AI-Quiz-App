@@ -1,5 +1,4 @@
-// src/App.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import QuizForm from "./componets/QuizForm";
 import QuizPage from "./pages/QuizPage";
 import ResultPage from "./pages/ResultPage";
@@ -10,11 +9,14 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-base-100">
-      {stage === "home" && (
-        <QuizForm onStart={() => setStage("quiz")} />
-      )}
+      {stage === "home" && <QuizForm onStart={() => setStage("quiz")} />}
       {stage === "quiz" && (
-        <QuizPage onFinish={(score) => { setScore(score); setStage("result"); }} />
+        <QuizPage
+          onFinish={(score) => {
+            setScore(score);
+            setStage("result");
+          }}
+        />
       )}
       {stage === "result" && (
         <ResultPage score={score} onRestart={() => setStage("home")} />

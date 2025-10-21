@@ -1,9 +1,12 @@
-// src/components/QuizForm.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 
-export default function QuizForm({ onStart }: { onStart: (t: string, n: number) => void }) {
+interface QuizFormProps {
+  onStart: (t: string, n: number) => void;
+}
+
+export default function QuizForm({ onStart }: QuizFormProps) {
   const [topic, setTopic] = useState("");
-  const [numQuestions, setNumQuestions] = useState(5);
+  const [numQuestions, setNumQuestions] = useState(1);
 
   return (
     <div className="max-w-md mx-auto p-6 bg-base-200 rounded-xl shadow-lg mt-10">
