@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuizStore } from "../store/QuizStore";
+import Loader from "../componets/Loader";
 
-interface QuizFormProps {
-  onStart: (t: string, n: number) => void;
-}
-
-export default function QuizForm({ onStart }: QuizFormProps) {
+export default function QuizForm() {
   const [topic, setTopic] = useState("");
   const [numQuestions, setNumQuestions] = useState(1);
+
+  const fetchQuestions = useQuizStore((state) => state.fetchQuestions);
+  const setStage = useQuizStore((state) => state.setStage);
+  const loading = useQuizStore((state) => state.loading);
+
+  const handleSubmit = async (topic: string, numQuestions: number) => {
+    await fetchQuestions(topic, numQuestions);
+    setStage("quiz");
+  };
+
+  useEffect(() => {
+    console.log("loading = ", loading);
+  }, [loading]);
 
   return (
     <div className="max-w-md mx-auto p-6 bg-base-200 rounded-xl shadow-lg mt-10">
@@ -37,10 +48,11 @@ export default function QuizForm({ onStart }: QuizFormProps) {
 
       <button
         className="btn btn-primary w-full"
-        onClick={() => onStart(topic, numQuestions)}
+        onClick={() => handleSubmit(topic, numQuestions)}
       >
         Start Quiz 🚀
       </button>
+      {loading && <Loader />}
     </div>
   );
 }

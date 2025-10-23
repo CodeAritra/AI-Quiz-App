@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { demoQuestions } from "../data/demoQuestions";
+import { useEffect, useState } from "react";
+import { useQuizStore } from "../store/QuizStore";
+// import { demoQuestions } from "../data/demoQuestions";
 
-interface QuizPageProps {
-  onFinish: (score: number) => void;
-}
-
-export default function QuizPage({ onFinish }: QuizPageProps) {
+export default function QuizPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
 
-  const currentQuestion = demoQuestions[currentIndex];
-  const totalQuestions = demoQuestions.length;
+  const questions = useQuizStore((state) => state.questions);
+  const setStage = useQuizStore((state) => state.setStage);
+
+  const currentQuestion = questions[currentIndex];
+  const totalQuestions = questions.length;
 
   const handleSelect = (option: string) => {
     setAnswers((prev) => ({ ...prev, [currentIndex]: option }));
@@ -22,16 +22,28 @@ export default function QuizPage({ onFinish }: QuizPageProps) {
     } else {
       // Calculate score and finish
       let score = 0;
-      demoQuestions.forEach((q, i) => {
+      questions.forEach((q, i) => {
         if (answers[i] === q.correct_answer) score += q.marks;
       });
-      onFinish(score);
+      // onFinish(score);
+      setStage("result")
+      console.log("score = ", score);
     }
   };
 
   const handlePrevious = () => {
     if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
   };
+
+  useEffect(() => {
+    console.log(
+      "questions = ",
+      questions,
+      "\nanswers = ",
+      answers,
+      "\nscore = "
+    );
+  }, [questions, answers]);
 
   return (
     <div className="max-w-xl mx-auto p-6 mt-10 bg-base-200 rounded-xl shadow-lg">
@@ -52,7 +64,7 @@ export default function QuizPage({ onFinish }: QuizPageProps) {
         {Object.entries(currentQuestion.options).map(([key, value]) => (
           <button
             key={key}
-            onClick={() => handleSelect(key)}
+            onClick={() => handleSelect(value)}
             className={`btn ${
               answers[currentIndex] === key
                 ? "btn-primary"

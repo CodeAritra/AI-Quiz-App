@@ -1,9 +1,4 @@
-interface ResultProps {
-  score: number;
-  onRestart: () => void;
-}
-
-export default function ResultPage({ score, onRestart }: ResultProps) {
+export default function ResultPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center">
       <h2 className="text-4xl font-bold mb-4">🏁 Quiz Completed!</h2>

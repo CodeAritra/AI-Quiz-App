@@ -1,26 +1,16 @@
-import { useState } from "react";
-import QuizForm from "./componets/QuizForm";
+import QuizForm from "./pages/QuizForm";
 import QuizPage from "./pages/QuizPage";
 import ResultPage from "./pages/ResultPage";
+import { useQuizStore } from "./store/QuizStore";
 
 export default function App() {
-  const [stage, setStage] = useState<"home" | "quiz" | "result">("home");
-  const [score, setScore] = useState(0);
+  const stage = useQuizStore((state) => state.stage);
 
   return (
     <div className="min-h-screen bg-base-100">
-      {stage === "home" && <QuizForm onStart={() => setStage("quiz")} />}
-      {stage === "quiz" && (
-        <QuizPage
-          onFinish={(score) => {
-            setScore(score);
-            setStage("result");
-          }}
-        />
-      )}
-      {stage === "result" && (
-        <ResultPage score={score} onRestart={() => setStage("home")} />
-      )}
+      {stage === "home" && <QuizForm />}
+      {stage === "quiz" && <QuizPage />}
+      {stage === "result" && <ResultPage />}
     </div>
   );
 }
