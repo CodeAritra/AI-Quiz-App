@@ -14,6 +14,7 @@ interface QuizStore {
   numQuestions: number;
   questions: Questions[];
   score: number;
+  totalScore: number;
 
   loading: boolean;
 
@@ -22,6 +23,7 @@ interface QuizStore {
   setNoQuestions: (noQuestions: number) => void;
   setQuestions: (questions: Questions[]) => void;
   setScore: (score: number) => void;
+  setTotalScore: (totalScore: number) => void;
 
   fetchQuestions: (topic: string, numQuestions: number) => Promise<void>;
   reset: () => void;
@@ -33,6 +35,7 @@ export const useQuizStore = create<QuizStore>((set) => ({
   numQuestions: 0,
   questions: [],
   score: 0,
+  totalScore: 0,
 
   loading: false,
 
@@ -41,6 +44,7 @@ export const useQuizStore = create<QuizStore>((set) => ({
   setNoQuestions: (numQuestions) => set({ numQuestions }),
   setQuestions: (questions) => set({ questions }),
   setScore: (score) => set({ score }),
+  setTotalScore: (totalScore) => set({ totalScore }),
 
   fetchQuestions: async (topic, numQuestions) => {
     set({ loading: true });
@@ -66,5 +70,6 @@ export const useQuizStore = create<QuizStore>((set) => ({
       numQuestions: 0,
       questions: [],
       score: 0,
+      totalScore: 0,
     }),
 }));

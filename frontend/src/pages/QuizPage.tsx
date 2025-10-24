@@ -9,6 +9,11 @@ export default function QuizPage() {
   const questions = useQuizStore((state) => state.questions);
   const setStage = useQuizStore((state) => state.setStage);
   const setScore = useQuizStore((state) => state.setScore);
+  const setTotalScore = useQuizStore((state) => state.setTotalScore);
+
+  useEffect(() => {
+    setTotalScore(questions.length);
+  }, [questions, setTotalScore]);
 
   const currentQuestion = questions[currentIndex];
   const totalQuestions = questions.length;
@@ -27,8 +32,8 @@ export default function QuizPage() {
         if (answers[i] === q.correct_answer) score += q.marks;
       });
       // onFinish(score);
-      setScore(score)
-      setStage("result")
+      setScore(score);
+      setStage("result");
       console.log("score = ", score);
     }
   };
@@ -39,13 +44,15 @@ export default function QuizPage() {
 
   useEffect(() => {
     console.log(
-      "questions = ",
+      "all questions = ",
       questions,
+      "current questions = ",
+      currentQuestion,
       "\nanswers = ",
       answers,
       "\nscore = "
     );
-  }, [questions, answers]);
+  }, [questions, answers, currentQuestion]);
 
   return (
     <div className="max-w-xl mx-auto p-6 mt-10 bg-base-200 rounded-xl shadow-lg">
@@ -59,21 +66,27 @@ export default function QuizPage() {
           max="100"
         ></progress>
       </div>
-
-      <h3 className="text-lg font-medium mb-4">{currentQuestion.question}</h3>
+      <div>
+        <h3 className="text-lg font-medium mb-4">
+          {currentQuestion?.question}
+        </h3>
+        <h3 className="text-lg font-medium mb-4">
+          [Marks : {currentQuestion?.marks}]
+        </h3>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {Object.entries(currentQuestion.options).map(([key, value]) => (
+        {Object.entries(currentQuestion?.options).map(([key, value]) => (
           <button
             key={key}
             onClick={() => handleSelect(value)}
             className={`btn ${
-              answers[currentIndex] === key
+              answers[currentIndex] === value
                 ? "btn-primary"
                 : "btn-outline btn-primary"
             }`}
           >
-            {key}: {value}
+            {value}
           </button>
         ))}
       </div>

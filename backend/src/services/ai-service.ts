@@ -16,7 +16,7 @@ Each question must include:
 - question (string)
 - options (array of 4 strings)
 - correct_answer (string)
-- marks (1 or 2)
+- marks (1)
 
 Return ONLY pure JSON array. 
 Do NOT include markdown fences, explanations, or code block syntax. Example output:
