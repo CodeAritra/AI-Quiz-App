@@ -8,6 +8,7 @@ export default function QuizPage() {
 
   const questions = useQuizStore((state) => state.questions);
   const setStage = useQuizStore((state) => state.setStage);
+  const setScore = useQuizStore((state) => state.setScore);
 
   const currentQuestion = questions[currentIndex];
   const totalQuestions = questions.length;
@@ -26,6 +27,7 @@ export default function QuizPage() {
         if (answers[i] === q.correct_answer) score += q.marks;
       });
       // onFinish(score);
+      setScore(score)
       setStage("result")
       console.log("score = ", score);
     }
