@@ -50,10 +50,13 @@ export const useQuizStore = create<QuizStore>((set) => ({
     set({ loading: true });
 
     try {
-      const { data } = await axios.post("http://localhost:5000/quiz/generate", {
-        topic,
-        numQuestions,
-      });
+      const { data } = await axios.post(
+        "https://ai-quiz-app-backend-qjld.onrender.com/quiz/generate",
+        {
+          topic,
+          numQuestions,
+        }
+      );
       console.log("res = ", data);
       set({ loading: false, questions: data.questions });
     } catch (error) {
