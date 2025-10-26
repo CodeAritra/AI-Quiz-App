@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuizStore } from "../store/QuizStore";
-import Loader from "../componets/Loader";
+import Loader from "./Loader";
 
 export default function QuizForm() {
   const [topic, setTopic] = useState("");
