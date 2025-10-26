@@ -1,58 +1,81 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuizStore } from "../store/QuizStore";
 import Loader from "./Loader";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function QuizForm() {
   const [topic, setTopic] = useState("");
-  const [numQuestions, setNumQuestions] = useState(1);
+  const [numQuestions, setNumQuestions] = useState(5);
 
-  const fetchQuestions = useQuizStore((state) => state.fetchQuestions);
-  const setStage = useQuizStore((state) => state.setStage);
-  const loading = useQuizStore((state) => state.loading);
+  const fetchQuestions = useQuizStore((s) => s.fetchQuestions);
+  // const setStage = useQuizStore((s) => s.setStage);
+  const loading = useQuizStore((s) => s.loading);
 
-  const handleSubmit = async (topic: string, numQuestions: number) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    if (!topic.trim()) return alert("Please enter a topic!");
     await fetchQuestions(topic, numQuestions);
-    setStage("quiz");
+    navigate("/play");
   };
 
-  useEffect(() => {
-    console.log("loading = ", loading);
-  }, [loading]);
-
   return (
-    <div className="max-w-md mx-auto p-6 bg-base-200 rounded-xl shadow-lg mt-10">
-      <h2 className="text-2xl font-bold text-center mb-4">🎯 Generate Quiz</h2>
-
-      <div className="form-control mb-3">
-        <label className="label">Topic</label>
-        <input
-          type="text"
-          placeholder="Enter topic (e.g. JavaScript)"
-          className="input input-bordered w-full"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-        />
-      </div>
-
-      <div className="form-control mb-3">
-        <label className="label">Number of Questions</label>
-        <input
-          type="number"
-          min={1}
-          max={20}
-          className="input input-bordered w-full"
-          value={numQuestions}
-          onChange={(e) => setNumQuestions(Number(e.target.value))}
-        />
-      </div>
-
-      <button
-        className="btn btn-primary w-full"
-        onClick={() => handleSubmit(topic, numQuestions)}
+    <div className="relative flex flex-col items-center justify-center mt-10">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-bfrom-indigo-500/10 to-base-200 border border-indigo-300/20 shadow-xl p-8 rounded-3xl max-w-md w-full backdrop-blur-md"
       >
-        Start Quiz 🚀
-      </button>
-      {loading && <Loader />}
+        <h2 className="text-3xl font-extrabold text-center text-indigo-400 mb-2">
+          ⚡ Create Your AI Quiz
+        </h2>
+        <p className="text-center text-gray-400 mb-6">
+          Type a topic and choose how many questions you want!
+        </p>
+
+        {/* Topic Input */}
+        <div className="form-control mb-5">
+          <label className="label text-sm text-gray-300">Enter Topic</label>
+          <input
+            type="text"
+            placeholder="e.g. JavaScript, Space, AI..."
+            className="input input-bordered w-full bg-base-100 text-white focus:ring-2 focus:ring-indigo-400"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+          />
+        </div>
+
+        {/* Question Count Slider */}
+        <div className="form-control mb-5">
+          <label className="label text-sm text-gray-300">
+            Number of Questions:{" "}
+            <span className="font-semibold text-indigo-300">
+              {numQuestions}
+            </span>
+          </label>
+          <input
+            type="range"
+            min={1}
+            max={15}
+            value={numQuestions}
+            className="range range-primary"
+            onChange={(e) => setNumQuestions(Number(e.target.value))}
+          />
+        </div>
+
+        {/* Start Button */}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={handleSubmit}
+          className="btn btn-primary w-full font-bold text-lg"
+          disabled={loading}
+        >
+          {loading ? "Generating..." : "Start Quiz 🚀"}
+        </motion.button>
+
+        {loading && <Loader/>}
+      </motion.div>
     </div>
   );
 }

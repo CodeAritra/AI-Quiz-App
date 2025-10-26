@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
 import { Toaster } from "react-hot-toast";
+import QuizForm from "./components/QuizForm";
 
 export default function App() {
   return (
@@ -12,16 +13,17 @@ export default function App() {
           {/* 🏠 Home */}
           <Route path="/" element={<HomePage />} />
 
+          {/* 🧠 Normal Quiz form*/}
+          <Route path="/quiz" element={<QuizForm />} />
+
           {/* 🧠 Normal Quiz */}
-          <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/play" element={<QuizPage />} />
 
           {/* ⚔️ AI Battle Mode
           <Route path="/ai-battle" element={<AIBattlePage />} />
 
           {/* 👥 1v1 Multiplayer Mode */}
           {/* <Route path="/1v1" element={<OneVsOnePage />} /> */}
-
-          
         </Routes>
 
         {/* 🔔 Toast Notifications */}
