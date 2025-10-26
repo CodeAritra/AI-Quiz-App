@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
 import { Toaster } from "react-hot-toast";
 import QuizForm from "./components/QuizForm";
+import ResultPage from "./pages/ResultPage";
 
 export default function App() {
   return (
@@ -22,8 +23,8 @@ export default function App() {
           {/* ⚔️ AI Battle Mode
           <Route path="/ai-battle" element={<AIBattlePage />} />
 
-          {/* 👥 1v1 Multiplayer Mode */}
-          {/* <Route path="/1v1" element={<OneVsOnePage />} /> */}
+          {/* 👥 Result page */}
+          <Route path="/result" element={<ResultPage />} />
         </Routes>
 
         {/* 🔔 Toast Notifications */}

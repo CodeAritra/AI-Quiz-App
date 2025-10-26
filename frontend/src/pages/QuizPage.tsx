@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { useQuizStore } from "../store/QuizStore";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function QuizPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
 
   const questions = useQuizStore((state) => state.questions);
-  const setStage = useQuizStore((state) => state.setStage);
+  // const setStage = useQuizStore((state) => state.setStage);
   const setScore = useQuizStore((state) => state.setScore);
   const setTotalScore = useQuizStore((state) => state.setTotalScore);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     setTotalScore(questions.length);
@@ -31,7 +34,7 @@ export default function QuizPage() {
         if (answers[i] === q.correct_answer) score += q.marks;
       });
       setScore(score);
-      setStage("result");
+      navigate("/result")
     }
   };
 

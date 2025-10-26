@@ -1,66 +1,24 @@
-import axios from "axios";
 import { create } from "zustand";
-
-interface Questions {
-  question: string;
-  options: string[];
-  correct_answer: string;
-  marks: number;
-}
-
-interface QuizStore {
-  stage: "home" | "quiz" | "result";
-  topic: string;
-  numQuestions: number;
-  questions: Questions[];
-  score: number;
-  totalScore: number;
-
-  loading: boolean;
-
-  setStage: (stage: "home" | "quiz" | "result") => void;
-  setTopic: (topic: string) => void;
-  setNoQuestions: (noQuestions: number) => void;
-  setQuestions: (questions: Questions[]) => void;
-  setScore: (score: number) => void;
-  setTotalScore: (totalScore: number) => void;
-
-  fetchQuestions: (topic: string, numQuestions: number) => Promise<void>;
-  reset: () => void;
-}
+import type { QuizStore } from "../types/QuizTypes";
+import { fetchQuizQuestions } from "../api/api";
 
 export const useQuizStore = create<QuizStore>((set) => ({
-  stage: "home",
-  topic: "",
-  numQuestions: 0,
   questions: [],
   score: 0,
   totalScore: 0,
-
   loading: false,
 
-  setStage: (stage) => set({ stage }),
-  setTopic: (topic) => set({ topic }),
-  setNoQuestions: (numQuestions) => set({ numQuestions }),
   setQuestions: (questions) => set({ questions }),
   setScore: (score) => set({ score }),
   setTotalScore: (totalScore) => set({ totalScore }),
 
   fetchQuestions: async (topic, numQuestions) => {
     set({ loading: true });
-
     try {
-      const { data } = await axios.post(
-        "https://ai-quiz-app-backend-qjld.onrender.com/quiz/generate",
-        {
-          topic,
-          numQuestions,
-        }
-      );
-      console.log("res = ", data);
-      set({ loading: false, questions: data.questions });
+      const questions = await fetchQuizQuestions(topic, numQuestions);
+      set({ questions });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       set({ loading: false });
     }
@@ -68,9 +26,6 @@ export const useQuizStore = create<QuizStore>((set) => ({
 
   reset: () =>
     set({
-      stage: "home",
-      topic: "",
-      numQuestions: 0,
       questions: [],
       score: 0,
       totalScore: 0,
