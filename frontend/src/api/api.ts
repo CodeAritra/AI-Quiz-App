@@ -1,15 +1,15 @@
 import axios from "axios";
 import type { Questions } from "../types/QuizTypes";
 
-// const API_BASE_URL = "https://ai-quiz-app-backend-qjld.onrender.com";
-const DEV_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = "https://ai-quiz-app-backend-qjld.onrender.com";
+// const DEV_BASE_URL = "http://localhost:5000";
 
 export const fetchQuizQuestions = async (
   topic: string,
   numQuestions: number
 ): Promise<Questions[]> => {
   try {
-    const { data } = await axios.post(`${DEV_BASE_URL}/quiz/generate`, {
+    const { data } = await axios.post(`${API_BASE_URL}/quiz/generate`, {
       topic,
       numQuestions,
     });
