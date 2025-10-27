@@ -22,7 +22,7 @@ const modes = [
   {
     title: "1v1" as QuizMode,
     icon: <Users className="w-8 h-8 text-green-400" />,
-    desc: "Challenge a friend or random player in real time.",
+    desc: "Challenge a friend or random player in real time. (Coming soon...)",
     path: "/1v1-form",
     color: "from-green-500 to-emerald-500",
   },

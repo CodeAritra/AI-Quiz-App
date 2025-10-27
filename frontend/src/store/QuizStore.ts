@@ -9,6 +9,7 @@ export const useQuizStore = create<QuizStore>()(
       questions: [],
       aiAnswers: [],
       score: 0,
+      aiScore: 0,
       totalScore: 0,
       loading: false,
 
@@ -18,6 +19,7 @@ export const useQuizStore = create<QuizStore>()(
       setQuestions: (questions) => set({ questions }),
       setAiAnswers: (aiAnswers) => set({ aiAnswers }),
       setScore: (score) => set({ score }),
+      setAiScore: (aiScore) => set({ aiScore }),
       setTotalScore: (totalScore) => set({ totalScore }),
       setStage: (stage) => set({ stage }),
       setMode: (mode) => set({ mode }),
@@ -68,6 +70,7 @@ export const useQuizStore = create<QuizStore>()(
         questions: state.questions,
         aiAnswers: state.aiAnswers,
         score: state.score,
+        aiScore: state.aiScore,
         totalScore: state.totalScore,
         mode: state.mode,
       }),

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuizStore } from "../store/QuizStore";
 import Loader from "./Loader";
 import { motion } from "framer-motion";
@@ -28,12 +28,8 @@ export default function QuizForm({ mode }: QuizProps) {
     setStage("quiz");
   };
 
-  useEffect(() => {
-    console.log("mode = ", mode);
-  }, [mode]);
-
   return (
-    <div className="relative flex flex-col items-center justify-center mt-10">
+    <div className=" flex flex-col items-center justify-center min-h-screen overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

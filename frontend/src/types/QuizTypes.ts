@@ -16,6 +16,7 @@ export interface QuizStore {
   questions: Questions[];
   aiAnswers: Answers[];
   score: number;
+  aiScore: number;
   totalScore: number;
 
   loading: boolean;
@@ -25,6 +26,7 @@ export interface QuizStore {
   setQuestions: (questions: Questions[]) => void;
   setAiAnswers: (aiAnswers: Answers[]) => void;
   setScore: (score: number) => void;
+  setAiScore: (aiScore: number) => void;
   setTotalScore: (totalScore: number) => void;
 
   setStage: (stage: QuizStage) => void;
