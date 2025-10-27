@@ -2,22 +2,28 @@ import { useState } from "react";
 import { useQuizStore } from "../store/QuizStore";
 import Loader from "./Loader";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import type { QuizProps } from "../types/QuizTypes";
 
-export default function QuizForm() {
+export default function QuizForm({ mode }: QuizProps) {
   const [topic, setTopic] = useState("");
   const [numQuestions, setNumQuestions] = useState(5);
 
   const fetchQuestions = useQuizStore((s) => s.fetchQuestions);
-  // const setStage = useQuizStore((s) => s.setStage);
+  const setMode = useQuizStore((s) => s.setMode);
+  const setStage = useQuizStore((s) => s.setStage);
   const loading = useQuizStore((s) => s.loading);
-
-  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (!topic.trim()) return alert("Please enter a topic!");
+
+    // ✅ set mode in global store so next page knows
+    setMode(mode);
+
+    // ✅ Fetch quiz questions
     await fetchQuestions(topic, numQuestions);
-    navigate("/play");
+
+    // ✅ Move to quiz stage (same for both modes)
+    setStage("quiz");
   };
 
   return (
@@ -28,10 +34,12 @@ export default function QuizForm() {
         className="bg-gradient-to-bfrom-indigo-500/10 to-base-200 border border-indigo-300/20 shadow-xl p-8 rounded-3xl max-w-md w-full backdrop-blur-md"
       >
         <h2 className="text-3xl font-extrabold text-center text-indigo-400 mb-2">
-          ⚡ Create Your AI Quiz
+          {mode === "battle" ? "⚔️ AI Battle Quiz" : "⚡ Create Your AI Quiz"}
         </h2>
         <p className="text-center text-gray-400 mb-6">
-          Type a topic and choose how many questions you want!
+          {mode === "battle"
+            ? "Challenge the AI and prove your knowledge supremacy!"
+            : "Type a topic and choose how many questions you want!"}
         </p>
 
         {/* Topic Input */}
@@ -71,10 +79,16 @@ export default function QuizForm() {
           className="btn btn-primary w-full font-bold text-lg"
           disabled={loading}
         >
-          {loading ? "Generating..." : "Start Quiz 🚀"}
+          {loading
+            ? mode === "battle"
+              ? "Summoning AI Opponent..."
+              : "Generating..."
+            : mode === "battle"
+            ? "Start Battle 🤖⚔️"
+            : "Start Quiz 🚀"}
         </motion.button>
 
-        {loading && <Loader/>}
+        {loading && <Loader />}
       </motion.div>
     </div>
   );

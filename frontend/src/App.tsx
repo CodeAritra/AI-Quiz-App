@@ -1,10 +1,8 @@
 // src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import QuizPage from "./pages/QuizPage";
 import { Toaster } from "react-hot-toast";
-import QuizForm from "./components/QuizForm";
-import ResultPage from "./pages/ResultPage";
+import QuizFlow from "./pages/QuizFlow";
 
 export default function App() {
   return (
@@ -14,17 +12,8 @@ export default function App() {
           {/* 🏠 Home */}
           <Route path="/" element={<HomePage />} />
 
-          {/* 🧠 Normal Quiz form*/}
-          <Route path="/quiz" element={<QuizForm />} />
-
-          {/* 🧠 Normal Quiz */}
-          <Route path="/play" element={<QuizPage />} />
-
-          {/* ⚔️ AI Battle Mode
-          <Route path="/ai-battle" element={<AIBattlePage />} />
-
-          {/* 👥 Result page */}
-          <Route path="/result" element={<ResultPage />} />
+          <Route path="/quiz" element={<QuizFlow />} />
+          <Route path="/ai-battle" element={<QuizFlow />} />
         </Routes>
 
         {/* 🔔 Toast Notifications */}

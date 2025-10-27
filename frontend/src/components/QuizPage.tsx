@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import { useQuizStore } from "../store/QuizStore";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import type { QuizProps } from "../types/QuizTypes";
 
-export default function QuizPage() {
+export default function QuizPage({ mode }: QuizProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
 
   const questions = useQuizStore((state) => state.questions);
-  // const setStage = useQuizStore((state) => state.setStage);
-  const setScore = useQuizStore((state) => state.setScore);
-  const setTotalScore = useQuizStore((state) => state.setTotalScore);
+  const setStage = useQuizStore((s) => s.setStage);
+  const setScore = useQuizStore((s) => s.setScore);
 
-  const navigate = useNavigate()
+  const setTotalScore = useQuizStore((state) => state.setTotalScore);
 
   useEffect(() => {
     setTotalScore(questions.length);
@@ -29,12 +28,20 @@ export default function QuizPage() {
     if (currentIndex < totalQuestions - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
+      // ✅ Mode-based scoring
       let score = 0;
       questions.forEach((q, i) => {
         if (answers[i] === q.correct_answer) score += q.marks;
       });
       setScore(score);
-      navigate("/result")
+      // Normal Mode → Direct navigate to result
+      if (mode === "normal") {
+        setStage("result");
+      }
+      // AI Battle Mode → Different route or logic
+      else if (mode === "battle") {
+        setStage("result");
+      }
     }
   };
 
@@ -54,7 +61,8 @@ export default function QuizPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
           <h2 className="text-lg sm:text-xl font-semibold text-white text-center sm:text-left">
-            Question {currentIndex + 1} / {totalQuestions}
+            {mode === "battle" ? "🤖 AI Battle" : "🧠 Quiz"} — Question{" "}
+            {currentIndex + 1} / {totalQuestions}
           </h2>
           <progress
             className="progress progress-primary w-full sm:w-1/3 h-3"
@@ -68,7 +76,9 @@ export default function QuizPage() {
           <h3 className="text-xl sm:text-2xl font-bold text-primary mb-2">
             {currentQuestion?.question}
           </h3>
-          <p className="text-sm text-gray-400">Marks: {currentQuestion?.marks}</p>
+          <p className="text-sm text-gray-400">
+            Marks: {currentQuestion?.marks}
+          </p>
         </div>
 
         {/* Options */}

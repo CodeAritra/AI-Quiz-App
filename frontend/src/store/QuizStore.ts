@@ -8,9 +8,15 @@ export const useQuizStore = create<QuizStore>((set) => ({
   totalScore: 0,
   loading: false,
 
+  stage: "form",
+  mode: "normal",
+
   setQuestions: (questions) => set({ questions }),
   setScore: (score) => set({ score }),
   setTotalScore: (totalScore) => set({ totalScore }),
+
+  setStage: (stage) => set({ stage }),
+  setMode: (mode) => set({ mode }),
 
   fetchQuestions: async (topic, numQuestions) => {
     set({ loading: true });
