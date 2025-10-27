@@ -25,6 +25,7 @@ export interface QuizStore {
   setMode: (mode: QuizMode) => void;
 
   fetchQuestions: (topic: string, numQuestions: number) => Promise<void>;
+  aiBattle: (topic: string, numQuestions: number) => Promise<void>;
   reset: () => void;
 }
 

@@ -19,3 +19,23 @@ export const fetchQuizQuestions = async (
     throw error;
   }
 };
+
+export const fetchAiBattleQuestions = async (
+  topic: string,
+  numQuestions: number
+) => {
+  try {
+    const { data } = await axios.post(`${DEV_BASE_URL}/quiz/aibattle`, {
+      topic,
+      numQuestions,
+    });
+
+    return {
+      questions: data?.ans.questions,
+      answers: data?.ans.answers,
+    };
+  } catch (error) {
+    console.error("Error fetching quiz:", error);
+    throw error;
+  }
+};

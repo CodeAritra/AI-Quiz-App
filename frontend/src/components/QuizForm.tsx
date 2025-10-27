@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuizStore } from "../store/QuizStore";
 import Loader from "./Loader";
 import { motion } from "framer-motion";
@@ -9,6 +9,7 @@ export default function QuizForm({ mode }: QuizProps) {
   const [numQuestions, setNumQuestions] = useState(5);
 
   const fetchQuestions = useQuizStore((s) => s.fetchQuestions);
+  const aiBattle = useQuizStore((s) => s.aiBattle);
   const setMode = useQuizStore((s) => s.setMode);
   const setStage = useQuizStore((s) => s.setStage);
   const loading = useQuizStore((s) => s.loading);
@@ -20,11 +21,16 @@ export default function QuizForm({ mode }: QuizProps) {
     setMode(mode);
 
     // ✅ Fetch quiz questions
-    await fetchQuestions(topic, numQuestions);
+    if (mode === "normal") await fetchQuestions(topic, numQuestions);
+    if (mode === "battle") await aiBattle(topic, numQuestions);
 
     // ✅ Move to quiz stage (same for both modes)
     setStage("quiz");
   };
+
+  useEffect(() => {
+    console.log("mode = ", mode);
+  }, [mode]);
 
   return (
     <div className="relative flex flex-col items-center justify-center mt-10">
