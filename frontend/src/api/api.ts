@@ -25,7 +25,7 @@ export const fetchAiBattleQuestions = async (
   numQuestions: number
 ) => {
   try {
-    const { data } = await axios.post(`${DEV_BASE_URL}/quiz/aibattle`, {
+    const { data } = await axios.post(`${API_BASE_URL}/quiz/aibattle`, {
       topic,
       numQuestions,
     });
