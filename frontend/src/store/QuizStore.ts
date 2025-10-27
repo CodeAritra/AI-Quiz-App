@@ -7,6 +7,7 @@ export const useQuizStore = create<QuizStore>()(
   persist(
     (set) => ({
       questions: [],
+      aiAnswers: [],
       score: 0,
       totalScore: 0,
       loading: false,
@@ -15,6 +16,7 @@ export const useQuizStore = create<QuizStore>()(
       mode: "normal",
 
       setQuestions: (questions) => set({ questions }),
+      setAiAnswers: (aiAnswers) => set({ aiAnswers }),
       setScore: (score) => set({ score }),
       setTotalScore: (totalScore) => set({ totalScore }),
       setStage: (stage) => set({ stage }),
@@ -37,8 +39,11 @@ export const useQuizStore = create<QuizStore>()(
       aiBattle: async (topic, numQuestions) => {
         set({ loading: true });
         try {
-          const questions = await fetchAiBattleQuestions(topic, numQuestions);
-          set({ questions });
+          const { questions, answers } = await fetchAiBattleQuestions(
+            topic,
+            numQuestions
+          );
+          set({ questions, aiAnswers: answers });
         } catch (error) {
           console.error("Error fetching AI Battle questions:", error);
         } finally {
@@ -49,6 +54,7 @@ export const useQuizStore = create<QuizStore>()(
       reset: () =>
         set({
           questions: [],
+          aiAnswers: [],
           score: 0,
           totalScore: 0,
           stage: "form",
@@ -60,6 +66,7 @@ export const useQuizStore = create<QuizStore>()(
       partialize: (state) => ({
         // ✅ only persist these keys
         questions: state.questions,
+        aiAnswers: state.aiAnswers,
         score: state.score,
         totalScore: state.totalScore,
         mode: state.mode,

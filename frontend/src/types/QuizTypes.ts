@@ -7,9 +7,14 @@ export interface Questions {
   correct_answer: string;
   marks: number;
 }
+export interface Answers {
+  id: string;
+  answer: string;
+}
 
 export interface QuizStore {
   questions: Questions[];
+  aiAnswers: Answers[];
   score: number;
   totalScore: number;
 
@@ -18,6 +23,7 @@ export interface QuizStore {
   mode: QuizMode;
 
   setQuestions: (questions: Questions[]) => void;
+  setAiAnswers: (aiAnswers: Answers[]) => void;
   setScore: (score: number) => void;
   setTotalScore: (totalScore: number) => void;
 
