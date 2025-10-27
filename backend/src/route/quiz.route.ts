@@ -1,8 +1,9 @@
 import express from "express";
-import { generate } from "../controller/quiz.controller";
+import { aiBattle, generate } from "../controller/quiz.controller";
 
 const router = express.Router();
 
 router.post("/generate", generate);
+router.post("/aibattle", aiBattle);
 
 export default router;

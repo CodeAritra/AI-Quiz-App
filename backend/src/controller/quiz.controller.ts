@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { generateQuizQuestions } from "../services/ai-service";
+import {
+  generateAiBattle,
+  generateQuizQuestions,
+} from "../services/ai-service";
 
 export const generate = async (req: Request, res: Response) => {
   try {
@@ -31,5 +34,19 @@ export const generate = async (req: Request, res: Response) => {
       success: false,
       message: "Something went wrong in quiz generation",
     });
+  }
+};
+
+export const aiBattle = async (req: Request, res: Response) => {
+  try {
+    const { topic, numQuestions } = req.body;
+    const ans = await generateAiBattle(topic, numQuestions);
+    res
+      .status(200)
+      .send({ success: true, message: "Ai battle successfull", ans });
+  } catch (error) {
+    res
+      .status(400)
+      .send({ success: false, message: "Error in ai battle", error });
   }
 };

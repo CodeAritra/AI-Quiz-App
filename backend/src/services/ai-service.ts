@@ -1,6 +1,6 @@
-// src/services/aiService.ts
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+import { cleanJsonText } from "./cleanJsonText";
 dotenv.config();
 
 const aiClient = new GoogleGenAI({
@@ -40,28 +40,50 @@ Do NOT include markdown fences, explanations, or code block syntax. Example outp
       },
     });
 
-    let textOutput = response.text || "";
-    textOutput = textOutput
-      .replace(/```json/i, "")
-      .replace(/```/g, "")
-      .replace(/\r?\n|\r/g, " ")
-      .replace(/[“”]/g, '"')
-      .trim()
-      .replace(/\\'/g, "'") // Remove escaped single quotes
-      .replace(/\\"/g, '"') // Fix double quotes
-      .replace(/(\w)"(\w)/g, '$1\\"$2'); // Escape stray quotes between words
-
-    // Try to find the first '[' and the last ']' to ensure valid JSON array
-    const start = textOutput.indexOf("[");
-    const end = textOutput.lastIndexOf("]");
-    if (start !== -1 && end !== -1) {
-      textOutput = textOutput.slice(start, end + 1);
-    }
-
+    const raw = response.text || "";
+    const textOutput = cleanJsonText(raw);
     // console.log("output = ", textOutput);
     return await JSON.parse(textOutput);
   } catch (e) {
     console.error("Failed to parse AI output:", e);
     return [];
   }
+}
+
+export async function generateAiAnswers(questions: string[]) {
+  if (!questions || questions.length === 0) return [];
+
+  // Build compact JSON payload to ask the model to return indices only
+  const prompt = `
+You are an AI quiz taker. Given the following JSON array of questions (id, question, options),
+for each question select the answers of the best option.
+Return ONLY a JSON array of objects: [{"id":"q1","answer":virat kolhli}, ...] with no extra text.
+Here are the questions:
+${JSON.stringify(questions)}
+  `;
+
+  try {
+    const response = await aiClient.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      config: { temperature: 0.0, maxOutputTokens: 1000 },
+    });
+    const raw = response.text || "";
+    const cleaned = cleanJsonText(raw);
+    const aiAnswers = JSON.parse(cleaned);
+    if (!Array.isArray(aiAnswers)) return [];
+
+    return aiAnswers;
+  } catch (err) {
+    console.error("getAIAnswers parse error:", err);
+    return [];
+  }
+}
+
+export async function generateAiBattle(topic: string, numQuestions: number) {
+  try {
+    const questions = await generateQuizQuestions(topic, numQuestions);
+    const answers = await generateAiAnswers(questions);
+    return { questions, answers };
+  } catch (error) {}
 }
